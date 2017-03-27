@@ -14,6 +14,7 @@
         <script>
            window.onload = function () { 
                 new uploadPreview({ UpBtn: "up_img", DivShow: "imgdiv", ImgShow: "imgShow" });
+                new uploadPreview({ UpBtn: "up_user_img", DivShow: "user_img", ImgShow: "user_imgShow" });
             }
         </script>
         <style>

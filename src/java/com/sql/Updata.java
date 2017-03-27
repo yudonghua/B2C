@@ -89,7 +89,7 @@ public class Updata {
 									}
 		}
 	}
-        public void addBuy(String id,String name,String customer,String business,int money,int num){
+        public void addBuy(String id,String name,String customer,String business,String address,int money,int num){
 		Connection con =null;
 		PreparedStatement pstmt =null;
 		try {
@@ -100,15 +100,16 @@ public class Updata {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, user, password);
                         Statement stat = con.createStatement();
-			String sql = "INSERT INTO buy (id,name,customer,business,status,money,num) VALUES (?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO buy (id,name,customer,business,status,address,money,num) VALUES (?,?,?,?,?,?,?,?)";
 			pstmt = con.prepareStatement(sql);
                         pstmt.setString(1, id);
 			pstmt.setString(2, name);
 			pstmt.setString(3, customer);
                         pstmt.setString(4, business);
                         pstmt.setString(5, "订单已提交");
-                        pstmt.setInt(6, money);
-                        pstmt.setInt(7, num);
+                        pstmt.setString(6, address);
+                        pstmt.setInt(7, money);
+                        pstmt.setInt(8, num);
 			pstmt.executeUpdate();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -150,7 +151,7 @@ public class Updata {
 									}
 		}
 	}
-	public void addUser(String table, String username,String psw){
+	public void addUser(String table, String username,String psw,String phone,String address){
 		Connection con =null;
 		PreparedStatement pstmt =null;
 		try {
@@ -161,10 +162,12 @@ public class Updata {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, user, password);
                         Statement stat = con.createStatement();
-			String sql = "INSERT INTO "+table+" (username,password) VALUES (?,?)";
+			String sql = "INSERT INTO "+table+" (username,password,phone,address) VALUES (?,?,?,?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, username);
 			pstmt.setString(2, psw);
+                        pstmt.setString(3, phone);
+			pstmt.setString(4, address);
 			pstmt.executeUpdate();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

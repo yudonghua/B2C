@@ -29,8 +29,8 @@ import net.sf.json.JSONObject;
  *
  * @author PC
  */
-@WebServlet(name = "BuyServlet", urlPatterns = {"/BuyServlet"})
-public class BuyServlet extends HttpServlet {
+@WebServlet(name = "StatusServlet", urlPatterns = {"/StatusServlet"})
+public class StatusServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,14 +39,9 @@ public class BuyServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
                 HttpSession session = request.getSession();
-		String customer = request.getParameter("customer");
                 String id = request.getParameter("id");
-                String business = request.getParameter("business");
-                String name = request.getParameter("name");
-                String address = request.getParameter("address");
-                String money = request.getParameter("price");
-                String num = request.getParameter("num");
-                new Updata().addBuy(id,name,customer,business,address,Integer.parseInt(money),Integer.parseInt(num));
+                String status = request.getParameter("status");
+                new Updata().changeBuy(id, status);
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
 
 		

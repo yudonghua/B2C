@@ -32,6 +32,7 @@ SELECT * from goods;
                                         <div class="pic_text">
                                             <em style="display: none;" class="goods_id">${row.id}</em>
                                             <em style="display: none;" class="goods_business">${row.business}</em>
+                                            <em style="display: none;" class="goods_comment">${row.comment}</em>
                                             <em class="textfont text_list_bk">${row.name}</em>
 
 

@@ -22,10 +22,7 @@
         <style type="text/css">
         #goods{
             display: none;
-            background:#F2E6E6; 
-            position: fixed;
             width: 100%;
-            height: 300px;
             z-index:99;
             text-align:center;
             top: 200px;
@@ -34,8 +31,12 @@
         .goods input.result{ border:none; color:#FF5151;}
         </style>
         <script>
-        function buy_goods(id,business,name,price,num){
-                var post="customer=${username}"+"&id="+id+"&business="+business+"&name="+name+"&price="+price+"&num="+num;
+//                window.onload = function(){
+//            alert("dd");
+//         //  
+//        };
+        function buy_goods(id,business,name,price,num,address){
+                var post="customer=${username}"+"&id="+id+"&business="+business+"&name="+name+"&price="+price+"&num="+num+"&address="+address;
                 var xmlhttp;
                 if (window.XMLHttpRequest){
                     xmlhttp=new XMLHttpRequest();
@@ -47,6 +48,8 @@
                     if (xmlhttp.readyState==4 && xmlhttp.status==200){
                         $("#page_order").load("order.jsp");
                         $("#page_message").load("message.jsp");
+                        $("#goods").hide();
+                        $("#goods").siblings().show();
                         alert("购买成功");
                     }
                 }
@@ -56,6 +59,7 @@
         };
         </script>
         <script>
+        
         $(document).ready(function(){
             $("#page_goods").siblings().hide();
           $(".inner").click(function(){
@@ -63,8 +67,20 @@
             price=$(this).find('em[class*=newPrice]');
             gds_id=$(this).find('em[class*=goods_id]');
             gds_business=$(this).find('em[class*=goods_business]');
+            gds_comment=$(this).find('em[class*=goods_comment]');
             $("#goods_name").html(gds_name.html());
             $("#goods_price").html(price.html());
+            $("#goods_comment").html("");
+            var co = gds_comment.html();
+            if(co!=""){
+                var myobj=eval(co);
+                for(var i=0;i<myobj.length;i++){
+                    $("#goods_comment").html($("#goods_comment").html()+"<ul class='say_box'>"+myobj[i].comment+"<span class='dateview'>"+myobj[i].customer+"</span></ul>");
+                }
+            }
+            //$("#goods").css("background-image","url(images/user/yhd.png)");
+            $("#goods").css("background-image","url(images/goods/"+gds_id.html()+".png)");
+            $("#goods").siblings().hide();
             $("#goods").show();
 
           });
@@ -87,7 +103,8 @@
 
             });
             $(".gds_buy").click(function(){
-                buy_goods(gds_id.html(),gds_business.html(),gds_name.html(),price.html(),buy_goods_num.val());
+                alert($(this).parent().find('input[class*=address]').val());
+                buy_goods(gds_id.html(),gds_business.html(),gds_name.html(),price.html(),buy_goods_num.val(),$(this).parent().find('input[class*=address]').val());
                 $("#goods").hide();
 
             });
@@ -116,6 +133,11 @@
                 $("#page_message").siblings().hide();
 
             });
+            $(".gds_cancel").click(function(){
+                $("#goods").hide();
+                $("#goods").siblings().show();
+
+            });
         });
         </script>
         
@@ -126,12 +148,16 @@
             <div style="margin-top: 120px;">
                     <p id="goods_name"></p>
                     <p id="goods_price"></p>
+                    <div id="goods_comment"></div>
                     <br/>
                     <input type="button" class="minus"  value="-">
                     <input type="text" class="result" value="0">
                     <input type="button" class="add" value="+">
                     <input type="text" style=" width:4rem;" class="sum" value="0">
+                    <br>
+                    <input type="text" style=" width:20rem;" class="address"  placeholder="送货地址">
                     <input type="button" class="gds_buy" style="width: 4rem;" value="购买">
+                    <input type="button" class="gds_cancel" style="width: 4rem;" value="取消">
             </div>
         </div>
         <div class="wrapper" id="wrapper" data-curbg="wbg_0" style="min-height: 979px;">

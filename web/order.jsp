@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="net.sf.json.*" %>
+<%@ page import="com.other.User" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
@@ -11,7 +12,16 @@
 <sql:query dataSource="${snapshot}" var="result">
 SELECT * from buy where customer='${username}';
 </sql:query>
+<%
+//    List<User> users = new ArrayList<User>(); // JavaBean的List
+//    users.add(new User("黄彪", "xxxxxx"));
+//    users.add(new User("昊天", "xxxxxx"));
+//    users.add(new User("姐姐", "yyyyyy"));
+//    users.add(new User("丫头", "zzzzzz"));
+//
+//    session.setAttribute("users", users); // 添加到session
 
+%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -30,7 +40,30 @@ SELECT * from buy where customer='${username}';
             p {  width:15rem; height:1.5rem; font-size:1rem; margin: 20px 20px 20px 20px;border:1px solid #e5e5e5; text-align:center; color:#A1A09C; background-color:#fff;}
         </style>
          <script>
+            function order_delivery(id,status){
+                var post="id="+id+"&status="+status;
+                var xmlhttp;
+                if (window.XMLHttpRequest){
+                    xmlhttp=new XMLHttpRequest();
+                }
+                else{
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function(){
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200){
+                        $("#page_order").load("order.jsp");
+                        $("#page_message").load("message.jsp");
+                        alert("收货完成");
+                    }
+                }
+                xmlhttp.open("POST","StatusServlet",true);
+                xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                xmlhttp.send(post);
+        };
         $(document).ready(function(){
+            $(".order_status").click(function(){
+                order_delivery($(this).parent().find('p[class*=order_id]').html(),"已收货");
+            });
             $(".each_comment").hide();
             $(".btn_comment").click(function(){
                 if(!$(this).parent().parent().parent().find('.each_comment').is(":visible")){
@@ -48,6 +81,18 @@ SELECT * from buy where customer='${username}';
         </script>
     </head>
     <body>
+<!--       <table>
+            <tr>
+                <th>username</th>
+                <th>password</th>
+            </tr>
+            <c:forEach var="user" items="${users}">
+            <tr>
+            <td><c:out value="${user.username}"/></td>
+            <td><c:out value="${user.password}"/></td>
+            </tr>
+            </c:forEach>
+        </table>-->
         <div id="order_content">
                     <ul>
                         <c:forEach var="row" items="${result.rows}">
@@ -55,8 +100,9 @@ SELECT * from buy where customer='${username}';
                                 <div style="margin: 10px 10px 10px 10px;">
                                     <img src="images/goods/${row.id}.png" width="200px" height="200px" alt="没上传照片"/>
                                     <div style="float: right;">
+                                        <p class="order_id" style="display:none;">${row.id}</p>
                                         <p>购买数量:${row.num}</p>
-                                        <p>货物状态:${row.status}</p>
+                                        <p class="order_status">${row.status}</p>
                                         <p class="btn_comment">评论</p>
                                     </div>
                                     <div class="pic_text">
@@ -77,19 +123,25 @@ SELECT * from buy where customer='${username}';
                                     <div id="customer_comment">
                                     </div>
                                     <c:forEach var="row" items="${goods_comment.rows}">
-                                        <div class="cmt${row.id}">
-                                            
-                                        </div>
-                                        <script lanuage="javascript">
-                                                var co ='${row.comment}';
-                                                var myobj=eval(co);
-                                                for(var i=0;i<myobj.length;i++){
-                                                    $(".cmt${row.id}").html($(".cmt${row.id}").html()+"<ul class='say_box'>"+myobj[i].comment+"<span class='dateview'>"+myobj[i].customer+"</span></ul>");
-                                                    
-//                                                    document.write("<ul class='say_box'>"+myobj[i].comment);
-//                                                    document.write("<span class='dateview'>"+myobj[i].customer+"</span></ul>");
-                                                }
-                                        </script>
+
+                                        
+                                            <div class="cmt${row.id}">
+<!--                                            <div class="ttt">-->
+                                            </div>
+                                            <script lanuage="javascript">
+                                                    var co ='${row.comment}';
+                                                    var myobj=eval(co);
+                                                    for(var i=0;i<myobj.length;i++){
+                                                        $(".cmt${row.id}").html($(".cmt${row.id}").html()+"<ul class='say_box'>"+myobj[i].comment+"<span class='dateview'>"+myobj[i].customer+"</span></ul>");
+//                                                var body = document.body;
+//                                                var div = document.createElement("div");
+//                                                div.id = "mDiv";
+//                                                div.innerHTML = "<ul class='say_box'>"+myobj[i].comment+"<span class='dateview'>"+myobj[i].customer+"</span></ul>";
+//                                                body.appendChild(div);
+//                                                        document.write("<ul class='say_box'>"+myobj[i].comment);
+//                                                        document.write("<span class='dateview'>"+myobj[i].customer+"</span></ul>");
+                                                    }
+                                            </script>
                                     </c:forEach>
                                     
                                 </div>

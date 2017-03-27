@@ -17,6 +17,35 @@ SELECT * from buy where business='${username}';
         <style>
             p {  width:15rem; height:1.5rem; font-size:1rem; margin: 20px 20px 20px 20px;border:1px solid #e5e5e5; text-align:center; color:#A1A09C; background-color:#fff;}
         </style>
+         <script>
+
+        function msg_delivery(id,status){
+                var post="id="+id+"&status="+status;
+                var xmlhttp;
+                if (window.XMLHttpRequest){
+                    xmlhttp=new XMLHttpRequest();
+                }
+                else{
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function(){
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200){
+                        $("#page_order").load("order.jsp");
+                        $("#page_message").load("message.jsp");
+                        alert("送货成功");
+                    }
+                }
+                xmlhttp.open("POST","StatusServlet",true);
+                xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                xmlhttp.send(post);
+        };
+       
+        $(document).ready(function(){
+            $(".msg_status").click(function(){
+                msg_delivery($(this).parent().find('p[class*=msg_id]').html(),"货在路上");
+            });
+        });
+        </script>
     </head>
     <body>
         <div id="order_content">
@@ -25,9 +54,12 @@ SELECT * from buy where business='${username}';
                             <li style="width:100%">
                                 <div style="margin: 10px 10px 10px 10px;">
                                     <img src="images/goods/${row.id}.png" width="200px" height="200px" alt="没上传照片"/>
+                                    
                                     <div style="float: right;">
+                                        <p class="msg_id" style="display:none;">${row.id}</p>
                                         <p>购买数量:${row.num}</p>
-                                        <p>货物状态:${row.status}</p>
+                                        <p>送货地址:${row.address}</p>
+                                        <p class="msg_status">${row.status}</p>
                                         <p>评论</p>
                                     </div>
                                     <div class="pic_text">

@@ -45,7 +45,7 @@ public class RegistServlet extends HttpServlet {
 		if(repassword.equals(password)){
                         request.setAttribute("username", username);
                         session.setAttribute("username", username);
-                        new Updata().addUser("business", username, password);
+                //        new Updata().addUser("business", username, password);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
  
 			//response.setHeader("Refresh","1;url=welcome.jsp");
